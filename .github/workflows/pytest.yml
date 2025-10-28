@@ -1,0 +1,25 @@
+name: Ejemplo Saludo
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  tests:
+    name: Saluda al usuario
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: install-requirements
+        run: pip install -r requirements.txt
+        
+      - name: launch-pytests
+        run: pytest
+    
