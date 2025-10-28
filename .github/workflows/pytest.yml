@@ -1,4 +1,4 @@
-name: Ejemplo Saludo
+name: Ejemplo Pytests
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   tests:
-    name: Saluda al usuario
+    name: Ejecutar Pytests
     runs-on: ubuntu-latest
     steps:
       - name: setup-python
