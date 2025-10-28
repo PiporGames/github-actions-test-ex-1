@@ -1,0 +1,20 @@
+name: Ejemplo Saludo
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  saludar-al-usuario:
+    name: Saluda al usuario
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      
+      - name: print
+        run: echo ¡Hola, ${{ github.actor }}! Gracias por hacer push.
+        
+      - name: list
+        run: ls -la
+    
