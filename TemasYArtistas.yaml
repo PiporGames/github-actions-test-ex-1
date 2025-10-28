@@ -1,0 +1,866 @@
+openapi: 3.0.4
+info:
+  title: Temas y Autores (TA)
+  description: |-
+    Esta es la documentación para la API del Microservicio de Temas y Autores (TA) del proyecto OverSounds.
+  version: 1.0.0
+externalDocs:
+  description: Github access
+  url: https://github.com/orgs/UniExtremadura/teams/gb02
+servers:
+  - url: http://localhost
+tags:
+  - name: song
+    description: Access to artists songs
+  - name: album
+    description: Access to artists albums
+  - name: merchandising
+    description: Access to artist merchandising
+  - name: artist
+    description: Access to artists information
+    
+paths:
+  /song/{songId}:
+    get:
+      tags:
+        - song
+      summary: Gets a song info by Id
+      operationId: getSong
+      parameters:
+        - name: songId
+          in: path
+          description: ID of the Song
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Song not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - read
+    patch:
+      tags:
+        - song
+      summary: Updates a song in the database with form data.
+      operationId: updateSong
+      parameters:
+        - name: songId
+          in: path
+          description: ID of the Song
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Song'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+    delete:
+      tags:
+        - song
+      summary: Deletes a song.
+      operationId: deleteSong
+      parameters:
+        - name: songId
+          in: path
+          description: ID of the Song
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+  /song/upload:  
+    post:
+      tags:
+        - song
+      summary: Add a new song to the database
+      operationId: addSong
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Song'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+  /song/search:
+    get:
+      tags:
+        - song
+      summary: Search a song by an specific metric
+      description: Only one song metric can be use at a time. Other values MUST be null.
+      operationId: searchSong
+      parameters:
+        - name: q
+          in: query
+          description: Query to search ID for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+        '400':
+          description: Invalid input
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /album/{albumId}:
+    get:
+      tags:
+        - album
+      summary: Gets an album info by Id
+      operationId: getAlbum
+      parameters:
+        - name: albumId
+          in: path
+          description: ID of the album
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Album not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - read
+    patch:
+      tags:
+        - album
+      summary: Updates an album in the database with form data.
+      operationId: updateAlbum
+      parameters:
+        - name: albumId
+          in: path
+          description: ID of the album
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+    delete:
+      tags:
+        - album
+      summary: Deletes an album.
+      operationId: deleteAlbum
+      parameters:
+        - name: albumId
+          in: path
+          description: ID of the album
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+  /album/upload:  
+    post:
+      tags:
+        - album
+      summary: Add a new album to the database
+      operationId: addAlbum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+  /album/search:
+    get:
+      tags:
+        - album
+      summary: Search an album by a specific metric
+      description: Only one album metric can be used at a time. Other values MUST be null.
+      operationId: searchAlbum
+      parameters:
+        - name: q
+          in: query
+          description: Query to search album for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        '400':
+          description: Invalid input
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
+  /merch/{merchId}:
+    get:
+      tags:
+        - merchandising
+      summary: Gets a merchandising item info by Id
+      operationId: getMerch
+      parameters:
+        - name: merchId
+          in: path
+          description: ID of the Merchandising item
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Merchandising'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Merchandising item not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - read
+    patch:
+      tags:
+        - merchandising
+      summary: Updates a merchandising item in the database with form data.
+      operationId: updateMerch
+      parameters:
+        - name: merchId
+          in: path
+          description: ID of the Merchandising item
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Merchandising'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+    delete:
+      tags:
+        - merchandising
+      summary: Deletes a merchandising item.
+      operationId: deleteMerch
+      parameters:
+        - name: merchId
+          in: path
+          description: ID of the Merchandising item
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+  /merch/upload:  
+    post:
+      tags:
+        - merchandising
+      summary: Add a new merchandising item to the database
+      operationId: addMerch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Merchandising'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+  /merch/search:
+    get:
+      tags:
+        - merchandising
+      summary: Search a merchandising item by a specific metric
+      description: Only one merchandising metric can be used at a time. Other values MUST be null.
+      operationId: searchMerch
+      parameters:
+        - name: q
+          in: query
+          description: Query to search merchandising for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Merchandising'
+        '400':
+          description: Invalid input
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /artist/{artistId}:
+    get:
+      tags:
+        - artist
+      summary: Gets an artist info by Id
+      operationId: getArtist
+      parameters:
+        - name: artistId
+          in: path
+          description: ID of the artist
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Artist not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - read
+    patch:
+      tags:
+        - artist
+      summary: Updates an artist in the database with form data.
+      operationId: updateArtist
+      parameters:
+        - name: artistId
+          in: path
+          description: ID of the artist
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+    delete:
+      tags:
+        - artist
+      summary: Deletes an artist.
+      operationId: deleteArtist
+      parameters:
+        - name: artistId
+          in: path
+          description: ID of the artist
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+  /artist/upload:  
+    post:
+      tags:
+        - artist
+      summary: Add a new artist to the database
+      operationId: addArtist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artist'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - bandcamp_auth:
+          - write
+  /artist/search:
+    get:
+      tags:
+        - artist
+      summary: Search an artist by a specific metric
+      description: Only one artist metric can be used at a time. Other values MUST be null.
+      operationId: searchArtist
+      parameters:
+        - name: q
+          in: query
+          description: Query to search artist for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        '400':
+          description: Invalid input
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+    bandcamp_auth:
+      type: apiKey
+      in: cookie
+      name: token
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+    Song:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the Song
+          example: California Girls
+        artist:
+          type: integer
+          description: ID of the Artist that the Song belongs to
+          example: 0
+        collaborators:
+          type: array
+          items:
+            type: integer
+          description: List of IDs of Artists who collaborated on the song
+          example: [1, 2]
+        releaseDate:
+          type: string
+          format: date-time
+          description: Date of release of the Song
+          example: "2010-01-15T10:30:00Z"
+        description:
+          type: string
+          description: Description of the Song
+          example: CELEBRATING TEN YEARS OF TEENAGE DREAM!! REMASTERED IN 4K!
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+          description: Genres of the Song
+        cover:
+          type: string
+          description: base64 image of the Song cover
+          example: "data:image/png;base64,iVBORw0KGgoAAAAN..."
+        price:
+          type: number
+          format: float
+          description: Price of the Song
+          example: 10.99
+        albumId:
+          type: integer
+          description: ID of the Album the Song belongs to
+          example: 0
+      required:
+        - title
+        - artist
+        - releaseDate
+        - genres
+        - cover
+        - price
+        - albumId
+        
+    Album:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the Album
+          example: Teenage Dream
+        artist:
+          type: integer
+          description: ID of the Artist who owns the Album
+          example: 0
+        collaborators:
+          type: array
+          items:
+            type: integer
+          description: List of IDs of Artists who collaborated on the Album
+          example: [1, 2, 3]
+        description:
+          type: string
+          description: Description of the Album
+          example: "Third studio album featuring hits like California Gurls and Firework"
+        releaseDate:
+          type: string
+          format: date-time
+          description: Release date of the Album
+          example: "2010-08-24"
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+          description: Musical genres of the Album
+        songs:
+          type: array
+          items:
+            type: integer
+          description: List of IDs of Songs included in the Album
+          example: [1, 2, 3, 4, 5]
+        cover:
+          type: string
+          description: base64 image of the Album cover
+          example: "data:image/png;base64,iVBORw0KGgoAAAAN..."
+        price:
+          type: number
+          format: float
+          description: Price of the Album
+          example: 15.99
+      required:
+        - title
+        - artist
+        - releaseDate
+        - genres
+        - songs
+        - cover
+        - price
+          
+    Artist:
+      type: object
+      properties:
+        artisticName:
+          type: string
+          description: Stage name of the Artist
+          example: Katy Perry
+        artisticBiography:
+          type: string
+          description: Artistic biography of the Artist
+          example: "American singer, songwriter and actress known for her pop hits"
+        artisticEmail:
+          type: string
+          format: email
+          description: Artistic contact email of the Artist
+          example: contact@katyperry.com
+        artisticImage:
+          type: string
+          description: base64 image of the Artist profile
+          example: "data:image/png;base64,iVBORw0KGgoAAAAN..."
+        socialMediaUrl:
+          type: string
+          format: uri
+          description: URL of the Artist's social media
+          example: https://twitter.com/katyperry
+        registrationDate:
+          type: string
+          format: date-time
+          description: Registration date of the Artist
+          example: "2010-01-15T10:30:00Z"
+        userId:
+          type: integer
+          description: ID of the User associated with the Artist
+          example: 123
+      required:
+        - artisticName
+        - artisticEmail
+        - artisticImage
+        - registrationDate
+        - userId
+          
+    Merchandising:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the Merchandising item
+          example: Teenage Dream Tour T-Shirt
+        artists:
+          type: array
+          items:
+            type: integer
+          description: List of IDs of Artists associated with the Merchandising item
+          example: [0]
+        collaborators:
+          type: array
+          items:
+            type: integer
+          description: List of IDs of Artists who collaborated on the Merchandising item
+          example: [1, 2]
+        creationDate:
+          type: string
+          format: date-time
+          description: Date of creation of the Merchandising item
+          example: "2010-05-15T10:30:00Z"
+        description:
+          type: string
+          description: Description of the Merchandising item
+          example: "Official tour merchandise featuring the Teenage Dream album artwork"
+        price:
+          type: number
+          format: float
+          description: Price of the Merchandising item
+          example: 29.99
+        cover:
+          type: string
+          description: base64 image of the Merchandising item
+          example: "data:image/png;base64,iVBORw0KGgoAAAAN..."
+      required:
+        - title
+        - artists
+        - creationDate
+        - price
+        - cover
+
+    Genre:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the Genre
+          example: 1
+        name:
+          type: string
+          description: Name of the musical Genre
+          example: Pop
+        isSubgenre:
+          type: boolean
+          description: Indicates if it is a subgenre of another genre
+          example: false
+      required:
+        - id
+        - name
+        - isSubgenre
